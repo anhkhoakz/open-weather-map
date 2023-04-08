@@ -1,18 +1,6 @@
-import requests
-import datetime
 import os
-from dotenv import load_dotenv
-
-url = "https://pro.openweathermap.org/data/2.5/forecast/hourly?"
-
-
-def get_forecast(api_key, latitude, longitude):
-    """
-    Get the hourly forecast from OpenWeatherMap
-    """
-    response = requests.get(
-        f'{url}lat={latitude}&lon={longitude}&appid={api_key}')
-    return response.json()['list']
+import datetime
+from .weather_api import get_location
 
 
 def get_header():
@@ -41,7 +29,7 @@ def get_title():
     """
     Returns the title for the forecast table.
     """
-    return '4-Day Weather Forecast for Ho Chi Minh City'.center(130)
+    return f'4-Day Weather Forecast for {get_location()}'.center(130)
 
 
 def kelvin_to_celsius(temp):
@@ -78,7 +66,10 @@ def write_forecast_to_file(forecast_data, filename):
     decorLine = get_decorLine()
     title = get_title()
 
-    with open(filename, 'w') as file:
+    # construct the parent directory path using ".."
+    parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    file_path = os.path.join(parent_dir, filename)
+    with open(file_path, 'w') as file:
         file.write(f"{decorLine}\n{title}\n{decorLine}\n")
         file.write(row_format.format(*header) + '\n')
 
@@ -86,16 +77,3 @@ def write_forecast_to_file(forecast_data, filename):
             row = get_row(timestamp)
             row_str = row_format.format(*row)
             file.write(row_str + '\n')
-
-
-def main():
-    load_dotenv()
-    api_key = os.getenv("api_key")
-    latitude = os.getenv("latitude")
-    longitude = os.getenv("longitude")
-    forecast_data = get_forecast(api_key, latitude, longitude)
-    write_forecast_to_file(forecast_data, 'weather_forecast.txt')
-
-
-if __name__ == '__main__':
-    main()

@@ -1,3 +1,6 @@
+# Folders
+__pycache__/
+
+# Files
 .env
 weather_forecast.txt
-directGeocoding.py
