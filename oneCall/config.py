@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 base_url = "https://pro.openweathermap.org/"
-exclude_part = None
 
 try:
     load_dotenv()
