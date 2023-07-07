@@ -2,7 +2,6 @@ from getData import *
 from json import dump
 
 
-
 def writeData():
     with open("./oneCall.json", "w") as f:
         dump(data, f, indent=4)
